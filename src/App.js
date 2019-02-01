@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Title from './Title';
+import axios from 'axios';
 
 import './App.css';
 
@@ -7,39 +7,31 @@ class App extends Component {
 
     constructor() {
         super();
-    
         this.state = {
-            task: ['tarea 1', 'tarea 2', 'tarea 3']
+            names: []
         }
-    }
-    
-    addTask(){
-        this.setState({
-            task: this.state.task.concat('nuevo elemento')
-        })
-    }
-
-    updateTask(){
-        const index = this.state.task.findIndex(task => task === "tarea 1");
-
-        this.setState({
-            task: this.state.task.map((task, i) =>
-                i === index ? 'actaulizado' : task
-            )
-        })
+        axios.get('http://localhost:3003/name')
+            .then(response => {
+               this.setState({
+                names: response.data
+               })
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
   render() {
 
     return (
       <div>
-        <h3>Hola mundo</h3>
+        <h1>hola mundo</h1>
+
         <ul>
-            {this.state.task.map((task, index) =>
-                <li key={index}>{task}</li>)}
+            {this.state.names.map(name =>
+                <li key={name}>{name}</li>    
+            )}
         </ul>
-        <button onClick={this.addTask.bind(this)}>Agregar nuevo</button>
-        <button onClick={this.updateTask.bind(this)}>Modificar</button>
       </div>
     );
   }
